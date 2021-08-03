@@ -4,5 +4,3 @@ require "sinatra/reloader"
 get "/" do 
   "Getting started"
 end
-
-# hello world 
