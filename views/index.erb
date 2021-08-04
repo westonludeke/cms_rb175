@@ -1,10 +1,7 @@
 <h1>List of files:</h1>
-<% get_list_of_files.sort! %>
 
 <ul>
   <% @files.each do |file| %>
-    <% if file.include? ".txt" %>
-      <li><%= file %></li>
-    <% end %>
+    <li><%= file %></li>
   <% end %>
 </ul>

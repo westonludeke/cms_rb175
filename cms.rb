@@ -2,14 +2,11 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 
-helpers do 
-  def get_list_of_files
-    @files = Dir.entries('data')
-    @files
-  end
-end
+root = File.expand_path("..", __FILE__)
 
-get "/" do 
+get "/" do
+  @files = Dir.glob(root + "/data/*").map do |path|
+    File.basename(path)
+  end
   erb :index
 end
-
