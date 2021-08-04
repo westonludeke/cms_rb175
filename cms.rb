@@ -10,9 +10,6 @@ helpers do
 end
 
 get "/" do 
-  redirect "/files"
+  erb :index
 end
 
-get "/files" do 
-  erb :files
-end
