@@ -1,0 +1,10 @@
+<h1>List of files:</h1>
+<% get_list_of_files %>
+
+<ul>
+  <% @files.each do |file| %>
+    <% if file.include? ".txt" %>
+      <li><%= file %></li>
+    <% end %>
+  <% end %>
+</ul>
