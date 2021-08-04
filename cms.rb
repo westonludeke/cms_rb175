@@ -14,5 +14,6 @@ get "/:id" do
   id = params[:id]
   @contents = File.read("data/#{id}.txt")
 
+  headers["Content-Type"] = "text/plain"
   erb :page
 end
