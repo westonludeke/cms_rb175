@@ -10,17 +10,9 @@ get "/" do
   erb :index
 end
 
-get "/about.txt" do 
-  @contents = File.read("data/about.txt")
-  erb :page
-end
+get "/:id" do 
+  id = params[:id]
+  @contents = File.read("data/#{id}.txt")
 
-get "/changes.txt" do 
-  @contents = File.read("data/changes.txt")
-  erb :page
-end
-
-get "/history.txt" do 
-  @contents = File.read("data/history.txt")
   erb :page
 end

@@ -2,6 +2,7 @@
 
 <ul>
   <% @files.each do |file| %>
-    <li><a href="/<%= file %>"><%= file %></a></li>
+    <% path = File.basename(file, File.extname(file)) %>
+    <li><a href="/<%= path %>"><%= path %></a></li>
   <% end %>
 </ul>
