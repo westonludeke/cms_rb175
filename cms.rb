@@ -10,10 +10,11 @@ get "/" do
   erb :index
 end
 
-get "/:id" do 
-  id = params[:id]
-  @contents = File.read("data/#{id}.txt")
+get "/:page_id" do 
+  content_type 'text/plain'
+  @page_id = params[:page_id]
 
-  headers["Content-Type"] = "text/plain"
+  # headers["Content-Type"] = "text/plain"
+  @contents = File.read("data/#{@page_id}.txt")
   erb :page
 end
