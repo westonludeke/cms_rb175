@@ -11,10 +11,10 @@ get "/" do
 end
 
 get "/:page_id" do 
-  content_type 'text/plain'
   @page_id = params[:page_id]
 
-  # headers["Content-Type"] = "text/plain"
+  redirect "/" unless File.exists?("data/#{@page_id}.txt")
+
   @contents = File.read("data/#{@page_id}.txt")
   erb :page
 end
