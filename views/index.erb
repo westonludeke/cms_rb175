@@ -8,6 +8,6 @@
   <% @files.each do |file| %>
     <!-- trim extension from file name -->
     <% path = File.basename(file, File.extname(file)) %>
-    <li><a href="/<%= file %>"><%= file %></a></li>
+    <li><a href="/<%= file %>"><%= file %></a>&nbsp;&nbsp;<a href="/<%= file %>/edit">Edit</a></li>
   <% end %>
 </ul>

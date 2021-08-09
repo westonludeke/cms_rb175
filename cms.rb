@@ -16,6 +16,15 @@ helpers do
     markdown.render(text)
   end
 
+  def check_if_file_exists(file_path)
+    if File.file?(file_path)
+      load_file_content(file_path)
+    else
+      session[:message] = "#{params[:filename]} does not exist."
+      redirect "/"
+    end
+  end
+
   def load_file_content(path)
     content = File.read(path)
     case File.extname(path)
@@ -28,22 +37,28 @@ helpers do
   end
 end
 
+# view list of files
 get "/" do
   @files = Dir.glob(root + "/data/*").map { |path| File.basename(path) }
   @files.sort!
   erb :index
 end
 
+# load file
 get "/:filename" do 
   file_path = root + "/data/" + params[:filename]
 
-  if File.file?(file_path)
-    load_file_content(file_path)
-  else
-    session[:message] = "#{params[:filename]} does not exist."
-    redirect "/"
-  end
+  check_if_file_exists(file_path)
 end
+
+# edit file
+get "/:filename/edit" do 
+  file_path = root + "/data/" + params[:filename]
+
+  check_if_file_exists(file_path)
+end
+
+
 
 
 
