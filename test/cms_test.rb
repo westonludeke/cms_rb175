@@ -17,9 +17,9 @@ class CmsTest < Minitest::Test
 
     assert_equal 200, last_response.status
     assert_equal "text/html;charset=utf-8", last_response["Content-Type"]
-    assert_includes last_response.body, "about"
-    assert_includes last_response.body, "changes"
-    assert_includes last_response.body, "history"
+    assert_includes last_response.body, "about.md"
+    assert_includes last_response.body, "changes.txt"
+    assert_includes last_response.body, "history.txt"
   end
 
   def test_viewing_text_document
@@ -42,5 +42,14 @@ class CmsTest < Minitest::Test
 
     get "/" # Reload the page
     refute_includes last_response.body, "notafile.ext does not exist" # Assert that our message has been removed
+  end
+
+  # test/cms_test.rb
+  def test_viewing_markdown_document
+    get "/about.md"
+
+    assert_equal 200, last_response.status
+    assert_equal "text/html;charset=utf-8", last_response["Content-Type"]
+    assert_includes last_response.body, "Bacon ipsum"
   end
 end
