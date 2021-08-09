@@ -2,6 +2,11 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 
+configure do
+  enable :sessions
+  set :session_secret, 'super secret'
+end
+
 root = File.expand_path("..", __FILE__)
 
 get "/" do
@@ -10,11 +15,14 @@ get "/" do
   erb :index
 end
 
-get "/:page_id" do 
-  @page_id = params[:page_id]
+get "/:filename" do 
+  file_path = root + "/data/" + params[:filename]
 
-  redirect "/" unless File.exists?("data/#{@page_id}.txt")
-
-  @contents = File.read("data/#{@page_id}.txt")
-  erb :page
+  if File.file?(file_path)
+    headers["Content-Type"] = "text/plain"
+    File.read(file_path)
+  else
+    session[:message] = "#{params[:filename]} does not exist."
+    redirect "/"
+  end
 end

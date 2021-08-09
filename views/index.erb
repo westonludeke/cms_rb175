@@ -1,9 +1,13 @@
 <h3>List of files:</h3>
 
+<% if session[:message] %>
+  <p><%= session.delete(:message) %></p>
+<% end %>
+
 <ul>
   <% @files.each do |file| %>
     <!-- trim extension from file name -->
     <% path = File.basename(file, File.extname(file)) %>
-    <li><a href="/<%= path %>"><%= path %></a></li>
+    <li><a href="/<%= file %>"><%= file %></a></li>
   <% end %>
 </ul>
