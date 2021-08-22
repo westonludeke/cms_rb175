@@ -43,4 +43,11 @@ class CMSTest < Minitest::Test
     refute_includes last_response.body, "notafile.ext does not exist" # assert that the message has been removed
   end
 
+  def test_viewing_markdown_document
+    get "/about.md"
+
+    assert_equal 200, last_response.status
+    assert_equal "text/html;charset=utf-8", last_response["Content-Type"]
+    assert_includes last_response.body, "<h1>Ruby is...</h1>"
+  end
 end

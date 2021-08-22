@@ -2,6 +2,7 @@ require "sinatra"
 require "sinatra/reloader"
 require "sinatra/content_for"
 require "tilt/erubis"
+require "redcarpet"
 
 # enable ability to have sessions
 configure do 
@@ -10,6 +11,22 @@ configure do
 end
 
 root = File.expand_path("..", __FILE__)
+
+helpers do 
+  def render_markdown(text)
+    markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
+    markdown.render(text)
+  end
+
+  def load_files_contents(file)
+    if File.extname(file) == ".md"
+      render_markdown(File.read(file))
+    else
+      headers["Content-Type"] = "text/plain"
+      File.read(file)
+    end 
+  end
+end
 
 get "/" do 
   @files = Dir.glob(root + "/data/*").map do |path|
@@ -22,10 +39,10 @@ get "/:file_name" do
   file_path = root + "/data/" + params[:file_name]
 
   if File.file?(file_path)
-    headers["Content-Type"] = "text/plain"
-    File.read(file_path)
+    load_files_contents(file_path)
   else
     session[:message] = "#{params[:file_name]} does not exist."
     redirect "/"
   end
 end
+
