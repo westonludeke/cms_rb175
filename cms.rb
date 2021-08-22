@@ -25,7 +25,7 @@ helpers do
 
   def load_files_contents(file)
     if File.extname(file) == ".md"
-      render_markdown(File.read(file))
+      erb render_markdown(File.read(file))
     else
       headers["Content-Type"] = "text/plain"
       File.read(file)
