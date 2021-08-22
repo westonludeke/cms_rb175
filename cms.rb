@@ -1,6 +1,5 @@
 require "sinatra"
 require "sinatra/reloader"
-require "sinatra/content_for"
 require "tilt/erubis"
 require "redcarpet"
 
@@ -9,8 +8,6 @@ configure do
   enable :sessions
   set :session_secret, 'super secret'
 end
-
-# root = File.expand_path("..", __FILE__)
 
 def data_path
   if ENV["RACK_ENV"] == "test"
