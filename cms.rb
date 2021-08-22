@@ -5,8 +5,6 @@ require "tilt/erubis"
 
 root = File.expand_path("..", __FILE__)
 
-## test 
-
 get "/" do 
   @files = Dir.glob(root + "/data/*").map do |path|
     File.basename(path)
