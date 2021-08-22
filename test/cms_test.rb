@@ -28,4 +28,19 @@ class CMSTest < Minitest::Test
     assert_includes last_response.body, "2019 - Ruby 2.7 released."
   end
 
+  def test_document_not_found
+    get "/notafile.ext" # attempt to access a nonexistent file
+
+    assert_equal 302, last_response.status # assert the user was redirected
+
+    get last_response["Location"] # request the page that the user was redidrected to
+
+    assert_equal 200, last_response.status
+    assert_includes last_response.body, "notafile.ext does not exist"
+
+
+    get "/" # reload the page
+    refute_includes last_response.body, "notafile.ext does not exist" # assert that the message has been removed
+  end
+
 end
