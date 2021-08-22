@@ -10,17 +10,17 @@ configure do
   set :session_secret, 'super secret'
 end
 
-root = File.expand_path("..", __FILE__)
+# root = File.expand_path("..", __FILE__)
+
+def data_path
+  if ENV["RACK_ENV"] == "test"
+    File.expand_path("../test/data", __FILE__)
+  else
+    File.expand_path("../data", __FILE__)
+  end
+end
 
 helpers do
-  def data_path
-    if ENV["RACK_ENV"] == "test"
-      File.expand_path("../test/data", __FILE__)
-    else
-      File.expand_path("../data", __FILE__)
-    end
-  end
-
   def render_markdown(text)
     markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     markdown.render(text)
