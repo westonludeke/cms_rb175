@@ -86,7 +86,7 @@ class CMSTest < Minitest::Test
   end
 
   def test_updating_document
-    post "/changes.txt", content: "new content"
+    post "/changes.txt/edit", content: "new content"
 
     assert_equal 302, last_response.status
 
@@ -97,6 +97,25 @@ class CMSTest < Minitest::Test
     get "/changes.txt"
     assert_equal 200, last_response.status
     assert_includes last_response.body, "new content"
+  end
+
+  def test_new_new_file_page
+    get "/new"
+
+    assert_equal 200, last_response.status
+    assert_includes last_response.body, "<input"
+    assert_includes last_response.body, %q(<input type="submit")
+  end
+
+  def test_creating_new_document
+    post "/create", new_file_name: "new_file.html"
+    assert_equal 302, last_response.status 
+
+    get last_response["Location"]
+    assert_includes last_response.body, "new_file.html has been created!"
+
+    get "/"
+    assert_includes last_response.body, "new_file.html"
   end
 end
 

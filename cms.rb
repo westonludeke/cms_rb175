@@ -48,14 +48,19 @@ get "/new" do
 end
 
 # Add new file
-post "/" do 
-  if params[:new_file_name] == ""
+post "/create" do 
+  new_file_name = params[:new_file_name].to_s
+
+  if new_file_name.size == 0
     session[:message] = "The file name cannot be blank"
+    status 422
     erb :new
   else
-    new_file_name = params[:new_file_name]
-    File.open("data/" + new_file_name, "w")
+    file_path = File.join(data_path, new_file_name)
+
+    File.write(file_path, "")
     session[:message] = "The file #{new_file_name} has been created!"
+    
     redirect "/"
   end
 end
