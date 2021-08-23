@@ -65,7 +65,7 @@ get "/:file_name/edit" do
   erb :edit
 end
 
-post "/:file_name" do
+post "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
 
   File.write(file_path, params[:content])
@@ -75,7 +75,11 @@ post "/:file_name" do
 end
 
 # post "/new" do 
-  
+#   p params[:content]
+#   # File.open(params[:content], w)
+
+#   session[:message] = "The file #{params[:file_name]} has been created!"
+#   redirect "/"
 # end
 
 
