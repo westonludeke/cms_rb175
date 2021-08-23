@@ -39,20 +39,19 @@ get "/" do
   @files = Dir.glob(pattern).map do |path|
     File.basename(path)
   end
+
   erb :index
 end
 
 # Render login page
-get "/users/login" do 
+get "/users/login" do
   erb :login
 end
 
-# Login page
+# Check login credentials and either login or redirect
 post "/users/login" do 
-  username = params[:username].to_s
-  password = params[:password].to_s
-
-  if username == "admin" && password == "secret"
+  if params[:username] == "admin" && params[:password] == "secret"
+    session[:username] = params[:username]
     session[:message] = "Welcome!"
     redirect "/"
   else
@@ -60,6 +59,13 @@ post "/users/login" do
     status 422
     erb :login
   end
+end
+
+# log out
+post "/users/logout" do
+  session.delete(:username)
+  session[:message] = "You are now logged out!"
+  redirect "/"
 end
 
 # Render new file creation page

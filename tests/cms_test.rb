@@ -131,6 +131,11 @@ class CMSTest < Minitest::Test
     get "/"
     refute_includes last_response.body, "delete_me.txt"
   end
+
+  def test_loggin_in
+    post "/users/login", username: "admin", password: "secret"
+    assert_equal 302, last_response.status
+  end
 end
 
 
