@@ -117,7 +117,22 @@ class CMSTest < Minitest::Test
     get "/"
     assert_includes last_response.body, "new_file.html"
   end
+
+  def test_deleting_document
+    create_document "delete_me.txt"
+
+    post "/delete_me.txt/delete"
+    assert_equal 302, last_response.status
+
+
+    get last_response["Location"]
+    assert_includes last_response.body, "delete_me.txt has been deleted"
+
+    get "/"
+    refute_includes last_response.body, "delete_me.txt"
+  end
 end
+
 
 
 
