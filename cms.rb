@@ -41,6 +41,10 @@ get "/" do
   erb :index
 end
 
+get "/new" do 
+  erb :new
+end
+
 get "/:file_name" do
   file_path = File.join(data_path, params[:file_name])
 
@@ -51,7 +55,6 @@ get "/:file_name" do
     redirect "/"
   end
 end
-
 
 get "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
@@ -70,5 +73,12 @@ post "/:file_name" do
   session[:message] = "#{params[:file_name]} has been edited"
   redirect "/"
 end
+
+# post "/new" do 
+  
+# end
+
+
+
 
 
