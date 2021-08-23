@@ -132,9 +132,38 @@ class CMSTest < Minitest::Test
     refute_includes last_response.body, "delete_me.txt"
   end
 
+  def test_login_form
+    get "/users/login"
+
+    assert_equal 200, last_response.status
+    assert_includes last_response.body, "<input"
+    assert_includes last_response.body, %q(<input type="submit")
+  end
+
   def test_loggin_in
     post "/users/login", username: "admin", password: "secret"
     assert_equal 302, last_response.status
+
+    get last_response["Location"]
+    assert_includes last_response.body, "Welcome!"
+    assert_includes last_response.body, "Signed in as: admin"
+  end
+
+  def test_signin_with_bad_credentials
+    post "/users/login", username: "guest", password: "bad_password"
+    assert_equal 422, last_response.status
+    assert_includes last_response.body, "Invalid user credentials"
+  end
+
+  def test_logging_out
+    post "/users/login", username: "admin", password: "secret"
+    get last_response["Location"]
+    assert_includes last_response.body, "Welcome"
+
+    post "/users/logout"
+    get last_response["Location"]
+    assert_includes last_response.body, "You are now logged out!"
+    assert_includes last_response.body, "Log In"
   end
 end
 
