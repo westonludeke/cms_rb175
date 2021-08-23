@@ -42,6 +42,26 @@ get "/" do
   erb :index
 end
 
+# Render login page
+get "/users/login" do 
+  erb :login
+end
+
+# Login page
+post "/users/login" do 
+  username = params[:username].to_s
+  password = params[:password].to_s
+
+  if username == "admin" && password == "secret"
+    session[:message] = "Welcome!"
+    redirect "/"
+  else
+    session[:message] = "Invalid user credentials"
+    status 422
+    erb :login
+  end
+end
+
 # Render new file creation page
 get "/new" do 
   erb :new
