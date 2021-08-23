@@ -33,6 +33,7 @@ helpers do
   end
 end
 
+# Home page
 get "/" do 
   pattern = File.join(data_path, "*")
   @files = Dir.glob(pattern).map do |path|
@@ -41,10 +42,21 @@ get "/" do
   erb :index
 end
 
+# Render new file creation page
 get "/new" do 
   erb :new
 end
 
+# Add new file
+post "/" do 
+  new_file_name = params[:new_file_name]
+  File.open("data/" + new_file_name, "w")
+
+  session[:message] = "The file #{new_file_name} has been created!"
+  redirect "/"
+end
+
+# Render specific file page
 get "/:file_name" do
   file_path = File.join(data_path, params[:file_name])
 
@@ -56,6 +68,7 @@ get "/:file_name" do
   end
 end
 
+# Render file edit form
 get "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
   
@@ -65,6 +78,7 @@ get "/:file_name/edit" do
   erb :edit
 end
 
+# Edit existing file's contents
 post "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
 
@@ -73,14 +87,6 @@ post "/:file_name/edit" do
   session[:message] = "#{params[:file_name]} has been edited"
   redirect "/"
 end
-
-# post "/new" do 
-#   p params[:content]
-#   # File.open(params[:content], w)
-
-#   session[:message] = "The file #{params[:file_name]} has been created!"
-#   redirect "/"
-# end
 
 
 
