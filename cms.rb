@@ -49,11 +49,15 @@ end
 
 # Add new file
 post "/" do 
-  new_file_name = params[:new_file_name]
-  File.open("data/" + new_file_name, "w")
-
-  session[:message] = "The file #{new_file_name} has been created!"
-  redirect "/"
+  if params[:new_file_name] == ""
+    session[:message] = "The file name cannot be blank"
+    erb :new
+  else
+    new_file_name = params[:new_file_name]
+    File.open("data/" + new_file_name, "w")
+    session[:message] = "The file #{new_file_name} has been created!"
+    redirect "/"
+  end
 end
 
 # Render specific file page
