@@ -101,6 +101,16 @@ post "/:file_name/edit" do
   redirect "/"
 end
 
+# Delete a specific file
+post "/:file_name/delete" do 
+  file_path = File.join(data_path, params[:file_name])
+
+  File.delete(file_path)
+
+  session[:message] = "#{params[:file_name]} has been deleted"
+  redirect "/"
+end
+
 
 
 
