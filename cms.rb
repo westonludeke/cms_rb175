@@ -2,25 +2,29 @@ require "sinatra"
 require "sinatra/reloader"
 require "tilt/erubis"
 require "redcarpet"
+require "yaml"
 
-# enable ability to have sessions
 configure do 
   enable :sessions
   set :session_secret, 'super secret'
 end
 
-def data_path
-  if ENV["RACK_ENV"] == "test"
-    File.expand_path("../test/data", __FILE__)
-  else
-    File.expand_path("../data", __FILE__)
-  end
-end
-
 helpers do
+  def data_path
+    if ENV["RACK_ENV"] == "test"
+      File.expand_path("../test/data", __FILE__)
+    else
+      File.expand_path("../data", __FILE__)
+    end
+  end
+
   def render_markdown(text)
     markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML)
     markdown.render(text)
+  end
+
+  def user_list
+    YAML.load(File.read("users.yml"))
   end
 
   def load_files_contents(file)
@@ -48,8 +52,9 @@ end
 get "/" do 
   pattern = File.join(data_path, "*")
   @files = Dir.glob(pattern).map { |path| File.basename(path) }
-  
+
   is_user_signed_in?
+
   erb :index
 end
 
@@ -59,8 +64,8 @@ get "/users/login" do
 end
 
 # Check login credentials and either login or redirect
-post "/users/login" do 
-  if params[:username] == "admin" && params[:password] == "secret"
+post "/users/login" do
+  if user_list[params[:username]] == params[:password]
     session[:username] = params[:username]
     session[:message] = "Welcome!"
     redirect "/"
