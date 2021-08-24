@@ -31,15 +31,25 @@ helpers do
       File.read(file)
     end 
   end
+
+  def is_user_signed_in?
+    session[:username] == "admin"
+  end
+
+  def not_logged_in_redirect
+    if is_user_signed_in? == false
+      session[:message] = "Sorry, you must be logged in to do that!"
+      redirect "/"
+    end
+  end
 end
 
 # Home page
 get "/" do 
   pattern = File.join(data_path, "*")
-  @files = Dir.glob(pattern).map do |path|
-    File.basename(path)
-  end
-
+  @files = Dir.glob(pattern).map { |path| File.basename(path) }
+  
+  is_user_signed_in?
   erb :index
 end
 
@@ -69,13 +79,16 @@ post "/users/logout" do
 end
 
 # Render new file creation page
-get "/new" do 
+get "/new" do
+  not_logged_in_redirect
   erb :new
 end
 
 # Add new file
 post "/create" do 
   new_file_name = params[:new_file_name].to_s
+
+  not_logged_in_redirect
 
   if new_file_name.size == 0
     session[:message] = "The file name cannot be blank"
@@ -111,6 +124,8 @@ end
 get "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
   
+  not_logged_in_redirect
+
   @requested_file = params[:file_name]
   @content = File.read(file_path)
 
@@ -121,6 +136,8 @@ end
 post "/:file_name/edit" do
   file_path = File.join(data_path, params[:file_name])
 
+  not_logged_in_redirect
+
   File.write(file_path, params[:content])
 
   session[:message] = "#{params[:file_name]} has been edited"
@@ -130,6 +147,8 @@ end
 # Delete a specific file
 post "/:file_name/delete" do 
   file_path = File.join(data_path, params[:file_name])
+
+  not_logged_in_redirect
 
   File.delete(file_path)
 
