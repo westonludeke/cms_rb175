@@ -89,7 +89,7 @@ post "/create" do
     file_path = File.join(data_path, new_file_name)
 
     File.write(file_path, "")
-    session[:message] = "The file #{new_file_name} has been created!"
+    session[:message] = "#{new_file_name} has been created!"
     
     redirect "/"
   end
@@ -102,7 +102,7 @@ get "/:file_name" do
   if File.file?(file_path)
     load_files_contents(file_path)
   else
-    session[:message] = "#{params[:file_name]} does not exist."
+    session[:message] = "#{params[:file_name]} does not exist"
     redirect "/"
   end
 end
