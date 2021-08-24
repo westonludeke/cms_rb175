@@ -28,6 +28,10 @@ class CMSTest < Minitest::Test
     end
   end
 
+  def admin_session
+    { "rack.session" => { username: "admin" } }
+  end
+
   def session
     last_request.env["rack.session"]
   end
@@ -74,15 +78,24 @@ class CMSTest < Minitest::Test
   def test_editing_document
     create_document "changes.txt"
 
-    get "/changes.txt/edit"
+    get "/changes.txt/edit", {}, admin_session
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, "<textarea"
     assert_includes last_response.body, %q(<button type="submit")
   end
 
+  def test_editing_document_signed_out
+    create_document "changes.txt"
+
+    get "/changes.txt/edit"
+
+    assert_equal 302, last_response.status
+    assert_equal "Sorry, you must be logged in to do that!", session[:message]
+  end
+
   def test_updating_document
-    post "/changes.txt/edit", content: "new content"
+    post "/changes.txt/edit", {content: "new content"}, admin_session
 
     assert_equal 302, last_response.status
     assert_equal "changes.txt has been edited", session[:message]
@@ -92,16 +105,28 @@ class CMSTest < Minitest::Test
     assert_includes last_response.body, "new content"
   end
 
-  def test_new_new_file_page
-    get "/new"
+  def test_updating_document_signed_out
+    post "/changes.txt/edit"
+    assert_equal 302, last_response.status 
+    assert_equal "Sorry, you must be logged in to do that!", session[:message]
+  end
+
+  def test_new_file_page
+    get "/new", {}, admin_session
 
     assert_equal 200, last_response.status
     assert_includes last_response.body, "<input"
     assert_includes last_response.body, %q(<input type="submit")
   end
 
+  def test_new_file_page_logged_out
+    get "/new"
+    assert_equal 302, last_response.status
+    assert_equal "Sorry, you must be logged in to do that!", session[:message]
+  end
+
   def test_creating_new_document
-    post "/create", new_file_name: "new_file.html"
+    post "/create", {new_file_name: "new_file.html"}, admin_session
     assert_equal 302, last_response.status 
     assert_equal "new_file.html has been created!", session[:message]
 
@@ -109,8 +134,14 @@ class CMSTest < Minitest::Test
     assert_includes last_response.body, "new_file.html"
   end
 
+  def test_creating_new_document_logged_out
+    post "/create", {new_file_name: "new_file.css"}
+    assert_equal 302, last_response.status
+    assert_equal "Sorry, you must be logged in to do that!", session[:message]
+  end
+
   def test_create_new_document_without_filename
-    post "/create", new_file_name: ""
+    post "/create", {new_file_name: ""}, admin_session
     assert_equal 422, last_response.status
     assert_includes last_response.body, "The file name cannot be blank"
   end
@@ -118,12 +149,20 @@ class CMSTest < Minitest::Test
   def test_deleting_document
     create_document("delete_me.txt")
 
-    post "/delete_me.txt/delete"
+    post "/delete_me.txt/delete", {}, admin_session
     assert_equal 302, last_response.status
     assert_equal "delete_me.txt has been deleted", session[:message]
 
     get "/"
     refute_includes last_response.body, %q(href="/test.txt")
+  end
+
+  def test_deleting_document_logged_out
+    create_document("delete_me.txt")
+
+    post "/delete_me.txt/delete"
+    assert_equal 302, last_response.status
+    assert_equal "Sorry, you must be logged in to do that!", session[:message]
   end
 
   def test_login_form
@@ -162,7 +201,6 @@ class CMSTest < Minitest::Test
     assert_includes last_response.body, "Log In"
   end
 end
-
 
 
 
