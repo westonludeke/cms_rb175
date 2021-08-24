@@ -3,6 +3,7 @@ require "sinatra/reloader"
 require "tilt/erubis"
 require "redcarpet"
 require "yaml"
+require "bcrypt"
 
 configure do 
   enable :sessions
@@ -24,7 +25,11 @@ helpers do
   end
 
   def user_list
-    YAML.load(File.read("users.yml"))
+    if ENV["RACK_ENV"] == "test"
+      YAML.load(File.read("../test/users.yml"))
+    else 
+      YAML.load(File.read("users.yml"))
+    end
   end
 
   def load_files_contents(file)
@@ -46,6 +51,17 @@ helpers do
       redirect "/"
     end
   end
+
+  def valid_credentials?(username, password)
+    credentials = user_list
+
+    if credentials.key?(username)
+      bcrypt_password = BCrypt::Password.ew(credentials[username])
+      bcrypt_password == password
+    else
+      false
+    end
+  end
 end
 
 # Home page
@@ -65,8 +81,10 @@ end
 
 # Check login credentials and either login or redirect
 post "/users/login" do
-  if user_list[params[:username]] == params[:password]
-    session[:username] = params[:username]
+  # if user_list[params[:username]] == params[:password]
+  if valid_credentials?(username, params[:password])
+    # session[:username] = params[:username]
+    session[:username] = username
     session[:message] = "Welcome!"
     redirect "/"
   else
