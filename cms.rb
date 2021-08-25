@@ -41,23 +41,23 @@ helpers do
     end 
   end
 
-  def is_user_signed_in?
-    session[:username] == "admin"
-  end
-
-  def not_logged_in_redirect
-    if is_user_signed_in? == false
-      session[:message] = "Sorry, you must be logged in to do that!"
-      redirect "/"
-    end
-  end
-
   def valid_credentials?(username, password)
     if user_list.key?(username)
       bcrypt_password = BCrypt::Password.new(user_list[username])
       bcrypt_password == password
     else 
       false
+    end
+  end
+
+  def is_user_signed_in?
+    session[:username] = params[:username]
+  end
+
+  def not_logged_in_redirect
+    if is_user_signed_in? == false
+      session[:message] = "Sorry, you must be logged in to do that!"
+      redirect "/"
     end
   end
 end
