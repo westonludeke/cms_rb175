@@ -1,10 +1,9 @@
 ENV["RACK_ENV"] = "test"
 
-require "fileutils"
-
 require "minitest/autorun"
 require "rack/test"
-
+require "fileutils"
+require "bcrypt"
 require_relative "../cms"
 
 class CMSTest < Minitest::Test
