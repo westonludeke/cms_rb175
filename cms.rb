@@ -53,12 +53,10 @@ helpers do
   end
 
   def valid_credentials?(username, password)
-    credentials = user_list
-
-    if credentials.key?(username)
-      bcrypt_password = BCrypt::Password.ew(credentials[username])
+    if user_list.key?(username)
+      bcrypt_password = BCrypt::Password.new(user_list[username])
       bcrypt_password == password
-    else
+    else 
       false
     end
   end
@@ -81,10 +79,8 @@ end
 
 # Check login credentials and either login or redirect
 post "/users/login" do
-  # if user_list[params[:username]] == params[:password]
-  if valid_credentials?(username, params[:password])
-    # session[:username] = params[:username]
-    session[:username] = username
+  if valid_credentials?(params[:username], params[:password])
+    session[:username] = params[:username]
     session[:message] = "Welcome!"
     redirect "/"
   else

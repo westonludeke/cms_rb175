@@ -1,4 +1,4 @@
 {
-  weston: password,
-  homer: simpson
+  weston: $2a$12$YSVKzRa75IHq3OQ16Srvf.JwNfI05GQJnSDwLvUFjHVBgCsisqiwC,
+  homer: $2a$12$iy/WHJVuAOqMR2LBRd25UeAt3o4TmhgWv/b9fjEZ3b2j5a/fsM5hm
 }
