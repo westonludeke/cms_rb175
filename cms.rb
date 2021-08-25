@@ -115,6 +115,10 @@ post "/create" do
     session[:message] = "The file name must include an extension"
     status 422
     erb :new
+  elsif File.extname(new_file_name) != ".txt" && File.extname(new_file_name) != ".md"
+    session[:message] = "The file extension must be either .txt or .md"
+    status 422
+    erb :new
   else
     file_path = File.join(data_path, new_file_name)
 
