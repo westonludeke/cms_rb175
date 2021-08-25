@@ -11,7 +11,7 @@ The goals of the project were to teach students:
 * Writing tests that verify the behavior of an application
 * And finally, to build a web app that allows users to view, edit, and create documents... as well as signing in and out of the site.
 
-My focus when building the project was on the back-end code. I may go add some more CSS and HTML in the future to make the site easier on the eyes.
+My focus when building the project was on the backend code. I may go add some more CSS and HTML in the future to make the site easier on the eyes.
 
 ### User Actions:
 

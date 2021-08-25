@@ -51,7 +51,7 @@ helpers do
   end
 
   def is_user_signed_in?
-    session[:username] = params[:username]
+    session[:username] != nil
   end
 
   def not_logged_in_redirect
@@ -66,8 +66,6 @@ end
 get "/" do 
   pattern = File.join(data_path, "*")
   @files = Dir.glob(pattern).map { |path| File.basename(path) }
-
-  is_user_signed_in?
 
   erb :index
 end

@@ -1,3 +1,5 @@
+<h3>File-Based CMS Project</h3>
+<h4>List of Project's files:</h4>
 <ul>
   <% @files.each do |file| %>
       <a href="/<%= file %>"><%= file %></a>
@@ -19,7 +21,7 @@
   </form>
 <% else %>
   <form action="/users/login" method="get">
-    <p class="user-status"><button type="submit">Login</button></p>
+    <p class="user-status"><button type="submit">Log In</button></p>
   </form>
 <% end %>
 

@@ -3,12 +3,10 @@
   <meta charset="utf-8">
   <title>CMS</title>
   <link href="/stylesheets/cms.css" rel="stylesheet" type="text/css">
-  <h3>File-Based CMS Project</h3>
 <body>
   <% if session[:message] %>
     <p class="message"><%= session.delete(:message) %></p> 
   <% end %>
-  <h4>List of Files:</h4>
   <%= yield %>
 </body>
 </html>
